@@ -1,0 +1,17 @@
+Copyright 2009 Erik Weitnauer
+
+This is the source code for the diploma thesis
+"Vision-Based Prediction of 2D Pushing Actions Using a State-of-the-Art Physics Engine".
+
+There are  parts of the project:
+1) Vision
+2) Physics
+3) Robotic
+
+Another subproject, combines the Vision and Phyics part, its calles
+o) Integration
+
+For more details please visit the project page
+http://redmine.ni.techfak.uni-bielefeld.de/projects/show/da-eweitnau
+
+Mail: eweitnau@techfak.uni-bielefeld.de

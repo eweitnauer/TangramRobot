@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<config>
+ <title>wooden tangram tiles from carpenter</title>
+ <data type="float" id="base_length">100</data>
+ <data type="float" id="height">18</data>
+
+ <section id="shape-1">
+  <data type="string" id="name">Square</data>
+  <data type="string" id="corners">-0.5,-0.5,0.5,-0.5,0.5,0.5,-0.5,0.5</data>
+  <data type="float" id="corner_scaling">1</data>
+ </section>
+
+ <section id="shape-2">
+  <data type="string" id="name">Parallelogram</data>
+  <data type="string" id="corners">-0.75,-0.25,-0.25,0.25,0.75,0.25,0.25,-0.25</data>
+  <data type="float" id="corner_scaling">1.414213562</data>
+ </section>
+
+ <section id="shape-3">
+  <data type="string" id="name">Triangle Small</data>
+  <data type="string" id="corners">-0.5,-0.166666667,0,0.333333333,0.5,-0.166666667</data>
+  <data type="float" id="corner_scaling">1.414213562</data>
+ </section>
+
+ <section id="shape-4">
+  <data type="string" id="name">Triangle Medium</data>
+  <data type="string" id="corners">-0.5,-0.166666667,0,0.333333333,0.5,-0.166666667</data>
+  <data type="float" id="corner_scaling">2</data>
+ </section>
+ 
+ <section id="shape-5">
+  <data type="string" id="name">Triangle Large</data>
+  <data type="string" id="corners">-0.5,-0.166666667,0,0.333333333,0.5,-0.166666667</data>
+  <data type="float" id="corner_scaling">2.828427124</data>
+ </section>
+</config>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<config>
+  <!-- Layout:     
+   0 -- 1 -- 2 -- 3  |  16 - 17 - 18 - 19
+   4 -- 5 -- 6 -- 7  |  20 - 21 - 22 - 23
+   8 -- 9 - 10 - 11  |  24 - 25 - 26 - 27
+  12 - 13 - 14 - 15  |  28 - 29 - 30 - 31
+
+                                                    ___
+   a------a------a------A3 B3-----b-----b-----b      |
+   |      |      |      |   |     |     |     |      |
+   a------a------a------a   b-----b-----b-----b      |  
+   |      |      |      |   |     |     |     |     ny (cells)
+   a------a------a------a   b-----b-----b-----b      |
+   |      |      |      |   |     |     |     |      |
+  A2------a------a------A1 B1-----b-----b-----B2    _|_
+
+   |-------- nx --------|
+           (cells)
+
+  A1 = partA.offset
+  A2 = partA.dx + partA.offset
+  A3 = partA.dy + partA.offset
+
+  B1 = partB.offset
+  B2 = partB.dx + partB.offset
+  B3 = partB.dy + partB.offset
+  -->
+  <title>Camera Calibration Config-File</title>
+  <data id="world-offset" type="string">0,266,0</data>
+  <section id="calibration-object">
+    <data id="nx" type="int">5</data>
+    <data id="ny" type="int">4</data>
+    <section id="part-A">
+      <data id="offset" type="string">-21.2 30.0 282.8</data>
+      <data id="dx" type="string">-199.8 0 -199.8</data>
+      <data id="dy" type="string">0 212.4 0</data>
+    </section>
+    <section id="part-B">
+      <data id="offset" type="string">21.9 30.0 282.1</data>
+      <data id="dx" type="string">199.8 0 -199.8</data>
+      <data id="dy" type="string">0 212.4 0</data>
+    </section>
+  </section>
+</config>

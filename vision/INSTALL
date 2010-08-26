@@ -1,0 +1,13 @@
+===============================================================
+INSTALLATION INSTRUCTIONS - Linux
+
+Dependecies:
+	* ICL (Image Component Library. Not open source yet. Contact 
+	  clebrech@techfak.uni-bielefeld.de for getting the sources. After installing
+	  make sure, that the icl.pc file is in your $PKG_CONFIG_PATH.
+
+Building:
+	$ make
+	$ make installlink
+
+The binaries are placed in the ./application folder.

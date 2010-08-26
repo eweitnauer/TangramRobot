@@ -1,0 +1,57 @@
+===============================================================
+INSTALLATION INSTRUCTIONS - Linux
+
+Dependencies:
+	* Bullet Physics Engine (see below)
+	
+Before building, you need to make sure, that the bullet.pc file of your Bullet
+installation is found by pkgconfig (its path must be in the $PKG_CONFIG var).
+
+Building:
+	$ cd physics_bullet
+	$ make
+	$ make installlink
+
+The binaries are placed in the ./application folder and are installed
+to $HOME/local/Projects/physics_bullet.
+
+===============================================================
+
+Install the Bullet Physics Engine
+=================================
+
+Project homepage: http://code.google.com/p/bullet/
+Official installation instructions are here:
+	http://www.bulletphysics.com/mediawiki-1.5.8/index.php?title=Installation
+
+	$ sudo apt-get install libglut3-dev (if not installed yet)
+	$ svn checkout http://bullet.googlecode.com/svn/tags/bullet-2.74
+	$ cd bullet-2.74
+	* apply patch (see below)
+	
+	Alternative A:
+	  $ ./autogen.sh
+	  $ ./configure --prefix=/homes/eweitnau/local/bullet/newest
+  Alternative B:
+  	$ cmake -G 'Unix Makefiles' -D'BUILD_SHARED_LIBS=true'
+	          -D'CMAKE_INSTALL_PREFIX=$HOME/local/bullet/2.74/'
+	          -D'CMAKE_CXX_FLAGS=-DBT_USE_DOUBLE_PRECISION'
+
+	$ make
+	$ make install
+	$ ln -s $HOME/src/bullet-2.74/Demos/OpenGL/libOpenGLSupport.so $HOME/local/bullet/2.74/lib/
+	$ cp $HOME/src/bullet-2.74/Demos/OpenGL/*.h $HOME/local/bullet/2.74/include/
+
+Patch for getting the keyboardUpCallback functionality for DemoApplication class:
+=================================
+
+	* clone the da_physics git repository
+	* cd into bullet directory
+	* copy the "bullet_add_keyboard_up_callback.diff" file from da_physics into
+	  the bullet directory
+	$ patch -p0 < bullet_add_keyboard_up_callback.diff
+
+Note: You don't need to apply this patch if you use a Bullet version of 2.75 or
+      higher since the patch was applyed to the main project.
+
+

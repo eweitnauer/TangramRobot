@@ -1,0 +1,39 @@
+Index: Demos/OpenGL/DemoApplication.h
+===================================================================
+--- Demos/OpenGL/DemoApplication.h	(revision 1649)
++++ Demos/OpenGL/DemoApplication.h	(working copy)
+@@ -187,7 +187,9 @@
+ 
+ 	///callback methods by glut	
+ 
+-	virtual void keyboardCallback(unsigned char key, int x, int y);
++	virtual void keyboardCallback(unsigned char key, int x, int y);
++	
++	virtual void keyboardUpCallback(unsigned char key, int x, int y) {};
+ 
+ 	virtual void specialKeyboard(int key, int x, int y);
+ 
+Index: Demos/OpenGL/GlutStuff.cpp
+===================================================================
+--- Demos/OpenGL/GlutStuff.cpp	(revision 1649)
++++ Demos/OpenGL/GlutStuff.cpp	(working copy)
+@@ -27,6 +27,11 @@
+ 	gDemoApplication->keyboardCallback(key,x,y);
+ }
+ 
++static	void glutKeyboardUpCallback(unsigned char key, int x, int y)
++{
++  gDemoApplication->keyboardUpCallback(key,x,y);
++}
++
+ static void glutSpecialKeyboardCallback(int key, int x, int y)
+ {
+ 	gDemoApplication->specialKeyboard(key,x,y);
+@@ -82,6 +87,7 @@
+     gDemoApplication->myinit();
+ 
+ 	glutKeyboardFunc(glutKeyboardCallback);
++	glutKeyboardUpFunc(glutKeyboardUpCallback);
+ 	glutSpecialFunc(glutSpecialKeyboardCallback);
+ 	glutSpecialUpFunc(glutSpecialKeyboardUpCallback);
+ 

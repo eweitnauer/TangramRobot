@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<config>
+  <data id="title" type="string">no title defined</data>
+  <section id="camera">
+    <data id="name" type="string">xcfp-top</data>
+    <data id="position" type="ColVec4">| -1.7679 |
+| 369.977 |
+| 1533.88 |
+| 1 |</data>
+    <data id="norm" type="ColVec4">| 0.0130212 |
+| 0.0220076 |
+| -0.999673 |
+| 1 |</data>
+    <data id="up" type="ColVec4">| 0.0130177 |
+| -0.999677 |
+| -0.0218381 |
+| 1 |</data>
+    <data id="f" type="float">1</data>
+    <data id="principal-point-offset" type="Point32f">(407.364,304.786)</data>
+    <data id="sampling-resolution-x" type="float">928.051</data>
+    <data id="sampling-resolution-y" type="float">923.564</data>
+    <data id="skew" type="float">2.10491</data>
+    <section id="render-params">
+      <data id="chip-size" type="Size">800x600</data>
+      <data id="clip-z-far" type="float">10000</data>
+      <data id="viewport" type="Rect">(0,0)800x600</data>
+      <data id="viewport-z-min" type="float">0</data>
+      <data id="viewport-z-max" type="float">1</data>
+    </section>
+  </section>
+</config>

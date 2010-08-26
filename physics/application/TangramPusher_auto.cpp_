@@ -1,0 +1,181 @@
+// Copyright 2009 Erik Weitnauer
+/// Pushing around a complete tangram puzzle with a, s, w, d keys.
+#include "TangramPusher.h"
+#include "Shapes.h"
+#include <btBulletDynamicsCommon.h>
+#include "GlutStuff.h"
+#include "LinearMath/btAlignedObjectArray.h"
+#include <iostream>
+
+using namespace std;
+
+#define SCALING 20.0
+/* Scaling the world:
+Obviously any collision shapes must be scaled appropriately, but there are also
+some other things that need to be changed. In general, if you are scaling the
+world by a factor of X then you must do the following:
+
+    * Scale collision shapes about origin by X
+    * Scale all positions by X
+    * Scale all linear (but not angular) velocities by X
+    * Scale linear Sleep Threshold by X ==> [Anm.: no sleeping anyway, so no need]
+    * Scale gravity by X ==> [Anm.: not a good idea - becomes instable]
+    * Scale all impulses you supply by X
+    * Scale all torques by X^2
+    * Scale all inertias by X if not computed by Bullet 
+
+Damping is a ratio so this does not need to be changed.
+Angular velocity should not need to be changed either.
+
+[http://www.bulletphysics.com/mediawiki-1.5.8/index.php?title=Scaling_The_World]
+*/
+
+void TangramPusher::myTickCallback(btDynamicsWorld *world, btScalar timeStep) {
+  TangramPusher *tp = static_cast<TangramPusher *>(world->getWorldUserInfo());
+  static btTransform transform;
+  tp->m_cylinder->getMotionState()->getWorldTransform(transform);
+  float dx = tp->m_target - transform.getOrigin().getX();
+	float vx = min(fabs(dx/timeStep*0.7), 2.);
+	if (dx<0) vx = -vx;
+//    tp->m_cylinder->setLinearVelocity(btVector3(2.*tp->dx*SCALING/20.,0.,4.*SCALING/20.*tp->dz));
+  tp->m_cylinder->setLinearVelocity(btVector3(vx,0.,0.));
+  tp->m_cylinder->setAngularFactor(0);
+}
+
+void TangramPusher::clientMoveAndDisplay() {
+  float usec = getDeltaTimeMicroseconds();
+  static bool firsttime = true;
+  if (m_dynamicsWorld) {
+    if (firsttime) {
+      m_dynamicsWorld->setInternalTickCallback(TangramPusher::myTickCallback, static_cast<void *>(this));
+      firsttime = false;
+    }
+    m_target = 4;
+//    m_dynamicsWorld->stepSimulation(usec / 1.e6, 100, m_params.sim_stepsize);
+    cout << "Start x: " << m_cylinder->getCenterOfMassPosition().getX() << endl;
+    m_dynamicsWorld->stepSimulation(0.1, 100000, m_params.sim_stepsize); sleep(0.1);
+    cout << "End x: " << m_cylinder->getCenterOfMassPosition().getX() << endl;
+  }
+  displayCallback();
+}
+
+void TangramPusher::keyboardUpCallback(unsigned char key, int x, int y) {
+  switch (key) {
+    case 'a': case 'd': dx = 0; break;
+    case 's': case 'w': dz = 0; break;
+  }
+}
+
+void TangramPusher::keyboardCallback(unsigned char key, int x, int y) {
+  switch (key) {
+    case 'a': dx = 1; break;
+    case 'd': dx = -1; break;
+    case 's': dz = -1; break;
+    case 'w': dz = 1; break;
+    case ' ': m_shouldApplyForce = !m_shouldApplyForce; break;
+    default: DemoApplication::keyboardCallback(key, x, y);
+  }
+}
+
+void TangramPusher::initPhysics() {
+  MinimalVisualizer::initPhysics();
+
+}
+
+btRigidBody* TangramPusher::createDynamicRigidBody(btVector3 position, btCollisionShape* shape,
+    float mass, float friction, float restitution) {
+  return createDynamicRigidBody(btTransform(btQuaternion(0,0,0,1), position), shape, mass, friction, restitution);
+}
+
+btRigidBody* TangramPusher::createDynamicRigidBody(btTransform transform, btCollisionShape* shape,
+                                      float mass, float friction, float restitution) {
+  btDefaultMotionState* motionState = new btDefaultMotionState(transform);
+  btVector3 inertia(0,0,0);
+  shape->calculateLocalInertia(mass, inertia);
+  btRigidBody::btRigidBodyConstructionInfo bodyCI(mass, motionState, shape, inertia);
+  bodyCI.m_friction = friction;
+  bodyCI.m_restitution = restitution;
+  bodyCI.m_linearDamping = m_params.lin_damping;
+  bodyCI.m_angularDamping = m_params.ang_damping;
+  btRigidBody* body = new btRigidBody(bodyCI);
+  body->setActivationState(DISABLE_DEACTIVATION);
+  return body;
+}
+
+void TangramPusher::initScene() {
+  m_dynamicsWorld->setGravity(m_params.gravity);
+ 	m_dynamicsWorld->getSolverInfo().m_numIterations = m_params.solver_iterations;
+	m_dynamicsWorld->getSolverInfo().m_solverMode = m_params.solver_mode;
+
+  
+  // add static ground plane at y=0
+  btCollisionObject *ground = createGround();
+  ground->setFriction(m_params.friction_ground);
+  ground->setRestitution(m_params.restitution_ground);
+  m_dynamicsWorld->addCollisionObject(ground);
+  
+  float a = 0.165*SCALING; // base length in m, scaled
+  float h = 0.017*SCALING; // heigth in m, scaled
+  float m = 0.180; // don't scale the mass (in kg)
+  
+  // cylinder with radius 1, length 5
+  btCollisionShape* cylinderShape = new btCylinderShape(btVector3(h,a/2,h));
+  m_collisionShapes.push_back(cylinderShape);
+  // triangle shapes
+  btCollisionShape* smallTriangleShape = Shapes::createTriangleShape(a,h);
+  btCollisionShape* mediumTriangleShape = Shapes::createTriangleShape(sqrt(2)*a,h);
+  btCollisionShape* bigTriangleShape = Shapes::createTriangleShape(2*a,h);
+  m_collisionShapes.push_back(smallTriangleShape);
+  m_collisionShapes.push_back(mediumTriangleShape);
+  m_collisionShapes.push_back(bigTriangleShape);
+  // square shape
+  btCollisionShape* squareShape = Shapes::createSquareShape(sqrt(2)/2*a,h);
+  m_collisionShapes.push_back(squareShape);
+  // parallelogram shape
+  btCollisionShape* prllShape = Shapes::createParallelogramShape(a,h);
+  m_collisionShapes.push_back(prllShape);
+  
+  // add cylinder shape to the world 3 m above ground
+  btTransform cylinder_transform(btQuaternion(0,0,0,1), btVector3(-10,a/2+h/2,0));
+  m_cylinder = createDynamicRigidBody(cylinder_transform, cylinderShape, 100,
+                 m_params.friction_pusher,  m_params.restitution_pusher);
+  m_cylinder->setGravity(btVector3(0,0,0));
+  m_dynamicsWorld->addRigidBody(m_cylinder);
+
+  float friction = m_params.friction_polygon;
+  float restitution = m_params.restitution_polygon;
+  a += a/10;
+  h *= 10;
+  btQuaternion q;
+  // add triangles to the world
+  q.setRotation(btVector3(0,1,0),-M_PI/2);
+  m_dynamicsWorld->addRigidBody(
+    createDynamicRigidBody(btTransform(q,btVector3(a/4,h/2,0)), smallTriangleShape, m, friction, restitution));
+  q.setRotation(btVector3(0,1,0),M_PI);
+  m_dynamicsWorld->addRigidBody(
+    createDynamicRigidBody(btTransform(q,btVector3(-a/2,h/2,3*a/4)), smallTriangleShape, m, friction, restitution));
+  q.setRotation(btVector3(0,1,0),M_PI/4);
+  m_dynamicsWorld->addRigidBody(
+    createDynamicRigidBody(btTransform(q,btVector3(3*a/4,h/2,3*a/4)), mediumTriangleShape, 2*m, friction, restitution));
+  m_dynamicsWorld->addRigidBody(
+    createDynamicRigidBody(btTransform(btQuaternion(0,0,0,1), btVector3(0,h/2,-a/2)), bigTriangleShape, 4*m, friction, restitution));
+  q.setRotation(btVector3(0,1,0),M_PI/2);
+  m_dynamicsWorld->addRigidBody(
+    createDynamicRigidBody(btTransform(q, btVector3(-a/2,h/2,0)), bigTriangleShape, 4*m, friction, restitution));
+  // add square
+  q.setRotation(btVector3(0,1,0),M_PI/4);
+  btRigidBody *squareBody = createDynamicRigidBody(btTransform(q, btVector3(0,h/2,a/2)), squareShape, 4*m, friction, restitution);
+  m_dynamicsWorld->addRigidBody(squareBody);
+  // add parallelogram
+  q.setRotation(btVector3(0,1,0),M_PI/2);
+  btRigidBody *prllBody = createDynamicRigidBody(btTransform(q, btVector3(3*a/4,h/2,-a/4)), prllShape, 2*m, friction, restitution);
+  m_dynamicsWorld->addRigidBody(prllBody);
+  
+  setCameraDistance(0.5*SCALING);
+}
+
+int main(int argc,char** argv) {
+  TangramPusher mvis;
+  mvis.init();
+  return glutmain(argc, argv,640,480,"Minimal Visualization Example",&mvis);
+}

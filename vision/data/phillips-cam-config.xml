@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<config>
+  <title>Phillips Camera (Q0 RObotic Setup) 08.07.2009</title>
+  <section id="camera">
+    <data id="pos" type="string">| -1.14128 247.302 1415.49 0 |</data>
+    <data id="norm" type="string">| -0.0515367 0.20579 -0.977238 0 |</data>
+    <data id="up" type="string">| 0.015834 0.978584 0.205238 0 |</data>
+    <data id="f" type="float">2.23273</data>
+    <data id="size" type="string">1600x1200</data>
+  </section>
+</config>

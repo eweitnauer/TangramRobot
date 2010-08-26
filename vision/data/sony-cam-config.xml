@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<config>
+  <data id="title" type="string"></data>
+  <section id="camera">
+    <data id="name" type="string"></data>
+    <data id="position" type="ColVec4">| 6.60695 |
+| 396.17 |
+| 1527.05 |
+| 1 |</data>
+    <data id="norm" type="ColVec4">| 0.00860135 |
+| -0.0047341 |
+| -0.999952 |
+| 1 |</data>
+    <data id="up" type="ColVec4">| 0.00819477 |
+| 0.999956 |
+| -0.00466363 |
+| 1 |</data>
+    <data id="f" type="float">3.15142</data>
+    <data id="principal-point-offset" type="Point32f">(320,240)</data>
+    <data id="sampling-resolution-x" type="float">200</data>
+    <data id="sampling-resolution-y" type="float">200</data>
+    <data id="skew" type="float">0</data>
+    <section id="render-params">
+      <data id="chip-size" type="Size">640x480</data>
+      <data id="clip-z-far" type="float">10000</data>
+      <data id="viewport" type="Rect">(0,0)640x480</data>
+      <data id="viewport-z-min" type="float">0</data>
+      <data id="viewport-z-max" type="float">1</data>
+    </section>
+  </section>
+</config>

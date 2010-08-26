@@ -1,0 +1,13 @@
+===============================================================
+INSTALLATION INSTRUCTIONS - Linux
+
+Dependecies:
+	* vision subproject
+	* physics subproject
+  (make sure all .pc files are reachable with your $PKG_CONFIG path.)
+
+Building:
+	$ make
+	$ make installlink
+
+The binaries are placed in the ./application folder.
