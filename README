@@ -4,14 +4,23 @@ This is the source code for the diploma thesis
 "Vision-Based Prediction of 2D Pushing Actions Using a State-of-the-Art Physics Engine".
 
 There are  parts of the project:
-1) Vision
-2) Physics
-3) Robotic
+# Vision
+# Physics
 
-Another subproject, combines the Vision and Phyics part, its calles
-o) Integration
+Another subproject, combines the Vision and Physics part, its called
+* Integration
+
+The project depends on:
+* ICL (Image Component Library) [1]
+* xri (XCF Robot Interface) -- not public yet [2]
+* Bullet Physics Library [3]
+* libgsl
 
 For more details please visit the project page
 http://redmine.ni.techfak.uni-bielefeld.de/projects/show/da-eweitnau
 
 Mail: eweitnau@techfak.uni-bielefeld.de
+
+[1] http://opensource.cit-ec.de/projects/icl
+[2] https://tin.techfak.uni-bielefeld.de/redmine/projects/xri
+[3] http://code.google.com/p/bullet/
