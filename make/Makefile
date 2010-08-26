@@ -19,7 +19,9 @@ ifeq "${OBJS}" ""
 endif
 
 APP_SOURCES=$(wildcard application/*.cpp)
-APPS=$(patsubst %.cpp,%${VERSION},${APP_SOURCES})
+APPS_NO_PATH=$(patsubst application/%.cpp,%${VERSION},${APP_SOURCES})
+APPS=$(patsubst application/%.cpp,bin/%${VERSION},${APP_SOURCES})
+#APPS=$(patsubst %.cpp,%${VERSION},${APP_SOURCES})
 
 DEP_FILES:=$(patsubst src/%.cpp,obj/%.src.dep,${SOURCES})
 APP_DEP_FILES:=$(patsubst application/%.cpp,obj/%.app.dep,${APP_SOURCES})
@@ -202,7 +204,7 @@ obj/%${VERSION}.o: src/%.cpp
 	${AT}${CXX} -c ${CXXFLAGS} ${CXXCPP} $< -o $@
 
 
-application/%${VERSION}: application/%.cpp lib/${LIB_FILE}
+bin/%${VERSION}: application/%.cpp lib/${LIB_FILE}
 	${ECHO} ${PROGRESS} ${BGRE}[app]${DEF} $@
 	${AT}${CXX} $< ${CXXFLAGS} ${CXXCPP} ${LIB_LNK} ${LDFLAGS} -o $@
 
@@ -228,7 +230,7 @@ clean: custom-clean-hook
 	${ECHO} ${PROGRESS} ${FBLA}${BYEL}[delete]${DEF} moc files
 	${AT}rm -rf ${MOC_SOURCES}
 	${ECHO} ${PROGRESS} ${FBLA}${BYEL}[delete]${DEF} apps
-	${AT}rm -rf ${APPS} 
+	${AT}rm -rf ${APPS}
 	${ECHO} ${PROGRESS} ${FBLA}${BYEL}[delete]${DEF} ${LIB_FILE}
 	${AT}rm -rf lib/${LIB_FILE}
 	${ECHO} ${PROGRESS} ${FBLA}${BYEL}[delete]${DEF} ${PC}
@@ -329,8 +331,8 @@ install: all ${PC} create-install-dirs custom-install-hook
 uninstall:
 	${ECHO} ${PROGRESS} ${BRED}[uninstall]${DEF} ${PFX}
 	${AT}rm -rf ${INC_INSTALL_PREFIX}
-	${AT}for T in ${APPS} ; do \
-		rm -rf `echo ${INSTALL_PREFIX}/bin/$$T | sed "s|application/||g"` ; \
+	${AT}for T in ${APPS_NO_PATH} ; do \
+		rm -rf ${INSTALL_PREFIX}/bin/$${T} ; \
 	done
 	${AT}rm -rf ${LIB_INSTALL_PREFIX}/${LIB_FILE}
 	${AT}rm -rf ${LIB_INSTALL_PREFIX}/pkgconfig/${PC}

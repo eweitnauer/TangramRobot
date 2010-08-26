@@ -1,33 +1,18 @@
 #!/bin/bash
 echo '==== Vision ===='
-cd vision
-make cleaner
-make -j4 || exit
-make doc
-make installlink
-cd ..
-
-echo '==== Robotic ===='
-cd robotic
-make cleaner
-make -j4 || exit
-make doc
-make installlink
-cd ..
+make cleaner -C vision
+make -j4  -C vision || exit
+make doc -C vision
+make installlink -C vision
 
 echo '==== Physics ===='
-cd physics/physics_bullet
-make cleaner
-make -j4 || exit
-make doc
-make installlink
-cd ../..
+make cleaner -C physics
+make -j4 -C physics || exit
+make doc -C physics
+make installlink -C physics
 
 echo '==== Integration ===='
-cd integration
-make cleaner
-make -j4 || exit
-make doc
-make installlink
-cd ..
-
+make cleaner -C integration
+make -j4 -C integration || exit
+make doc -C integration
+make installlink -C integration
